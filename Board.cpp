@@ -66,10 +66,9 @@ void Board::MoveBoard(int x1,int y1,int x2,int y2){
     board[x2][y2] = val;
     board[x1][y1] = 0;
 }
-bool Board::isValidMove(int x1,int y1,int x2,int y2){
+bool Board::isValidMove(bool isRedTurn,int x1,int y1,int x2,int y2){
     const int val = board[x1][y1];
     if(val == 0) return false;
-    const bool isRed = board[x1][y1] > 0?true:false;
     //  1. 通用判断
     //超出棋盘
     if(x1 < 1 || x2 < 1 || x1 > 10 || x2 > 10 || y1 < 1 || y2 < 1 || y1 > 9 || y2 > 9){
@@ -77,12 +76,12 @@ bool Board::isValidMove(int x1,int y1,int x2,int y2){
         return false;
     }
     // 移动棋子不对
-    if((isRed && (val < 0))||(!isRed && (val > 0))) {
+    if((isRedTurn && (val < 0))||(!isRedTurn && (val > 0))) {
         qDebug()<<"走了对方的棋！";
         return false;
     }
     // 目标位置有自己棋子
-    if((isRed && (board[x2][y2] > 0))|| (!isRed && (board[x2][y2] < 0)))
+    if((isRedTurn && (board[x2][y2] > 0))|| (!isRedTurn && (board[x2][y2] < 0)))
     {
         qDebug("目标位置有自己棋子");
         return false;
@@ -93,23 +92,23 @@ bool Board::isValidMove(int x1,int y1,int x2,int y2){
     case 1:case -1:{
         if((x1 == x2 && y1 == y2)||(x1 != x2 && y1 != y2)) return false;
         if(x1 < x2){
-            for(int i = x1;i < x2;i++){
-                if(board[i][y1] != 0) return false;
+            for(int i = x1 + 1;i < x2;i++){
+                if(board[i][y1] != 0) {qDebug()<<"車前进有阻挡";return false;}
             }
         }
         else if(x1 > x2){
-            for(int i = x1;i > x2;i--){
-                if(board[i][y1] != 0) return false;
+            for(int i = x1 - 1;i > x2;i--){
+                if(board[i][y1] != 0) {qDebug()<<"車前进有阻挡";return false;}
             }
         }
         else if(y1 < y2){
-            for(int i = y1;i < y2;i++){
-                if(board[x1][i] != 0) return false;
+            for(int i = y1 + 1;i < y2;i++){
+                if(board[x1][i] != 0) {qDebug()<<"車前进有阻挡";return false;}
             }
         }
         else{
-            for(int i = y1;i > y2;i--){
-                if(board[i][y1] != 0) return false;
+            for(int i = y1 - 1;i > y2;i--){
+                if(board[x1][i] != 0) {qDebug()<<"車前进有阻挡";return false;}
             }
         }
         return true;
@@ -144,17 +143,18 @@ bool Board::isValidMove(int x1,int y1,int x2,int y2){
         return true;
     }
     case 5:case -5:{
-        if(!(abs(x1-x2)==1&&abs(y1-y2)==0)|| !(abs(x1-x2)==0&&abs(y1-y2)==1)) return false;
+        if(!((abs(x1-x2)==1&&abs(y1-y2)==0)|| (abs(x1-x2)==0&&abs(y1-y2)==1))) return false;
         if(y2 > 6 || y2 < 4 || (x2 > 3 && x2 < 8)) return false;
+        return true;
     }
     case 7:{
-        if(x2 - x1 == 1 && y2 - y1 == 0) return true;
-        if(x1 < 6 && abs(x1-x2) == 0 && abs(y2-y1) == 1) return true;
+        if(x1 - x2 == 1 && y2 - y1 == 0) return true;
+        if(x1 < 6 && x1-x2 == 0 && abs(y2-y1) == 1) return true;
         return false;
     }
     case -7:{
         if(x2 - x1 == 1 && y2 - y1 == 0) return true;
-        if(x1 > 5 && abs(x1-x2) == 0 && abs(y2-y1) == 1) return true;
+        if(x1 > 5 && x1-x2 == 0 && abs(y2-y1) == 1) return true;
         return false;
     }
     case 6:case -6:{
@@ -177,9 +177,10 @@ bool Board::isValidMove(int x1,int y1,int x2,int y2){
         }
         else{
             for(int i = y1 - 1;i > y2;i--){
-                if(board[i][y1] != 0) count++;
+                if(board[x1][i] != 0) count++;
             }
         }
+        if(board[x2][y2] == 0 && count == 0) return true;
         if((count == 0 && board[x2][y2] * val > 0)|| (count == 1 && board[x2][y2] * val < 0)) return true;
         else return false;
     }

@@ -34,8 +34,6 @@ public:
 
 private slots:
     void onBoardClicked(int boardX, int boardY);  // 处理棋盘点击
-
-
 };
 
 #endif // GAMECONTROLLER_H

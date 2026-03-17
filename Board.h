@@ -16,8 +16,7 @@ public:
     int boardToWindowY(int x);// 注意board和窗口x、y相反
     int boardToWindowX(int y);
     void MoveBoard(int x1,int y1,int x2,int y2);
-    bool isValidMove(int,int,int,int);
+    bool isValidMove(bool,int,int,int,int);
 
 };
-
 #endif // BOARD_H

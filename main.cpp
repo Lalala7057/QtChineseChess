@@ -8,5 +8,4 @@ int main(int argc, char *argv[])
     game = new GameController(&a);
     game->curWindow->show();
     return a.exec();
-    delete game;
 }

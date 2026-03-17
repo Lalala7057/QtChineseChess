@@ -8,9 +8,7 @@ extern const int row,col;
 
 const int StartPosX = 80,StartPosY = 40,windowWidth = 1920,windowHeight = 1080;
 const int meshSize = 60,radius =25; //网格、棋子大小
-// MainWindow::MainWindow(Board* board){
 
-// }
 MainWindow::MainWindow(QWidget *parent,Board * board): QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
     isInitialized = false;
@@ -333,14 +331,31 @@ void MainWindow::mousePressEvent(QMouseEvent* event)
     int boardX, boardY;
     if (windowToBoard(event->pos().x(), event->pos().y(), boardX, boardY)) {
         qDebug() << "鼠标点击棋盘:" << boardX << boardY
-                 << "棋子:" << board->board[boardX][boardY];
+                 << "棋子:" <<board->getName(boardX,boardY);
         emit boardClicked(boardX, boardY);  // 发送信号
     } else {
         qDebug() << "点击无效区域";
     }
     event->accept();
 }
+void MainWindow::markPiece(QPainter& painter,int x,int y){
+    painter.setPen(QPen(Qt::blue,2,Qt::SolidLine,Qt::SquareCap,Qt::RoundJoin));
+    int windowX = board->boardToWindowX(y),windowY = board->boardToWindowY(x);
+    painter.drawEllipse(QPoint(windowX,windowY),radius - 1,radius - 1);
+    update();
+}
+void MainWindow::eraseMark(QPainter& painter,int x,int y){
+    painter.setPen(QPen(Qt::black,2,Qt::SolidLine,Qt::SquareCap,Qt::RoundJoin));
+    int windowX = board->boardToWindowX(y),windowY = board->boardToWindowY(x);
+    painter.drawEllipse(QPoint(windowX,windowY),radius - 1,radius - 1);
+    update();
+}
 MainWindow::~MainWindow()
 {
+    for(int i = 0;i <= row;i++)
+    {
+        delete board->board[i];
+    }
+    delete board;
     delete ui;
 }

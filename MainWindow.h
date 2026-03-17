@@ -23,6 +23,8 @@ public:
     ~MainWindow();
     void drawPiece(QPainter& painter,int,int);
     void erasePiece(QPainter& painter,int,int);
+    void markPiece(QPainter& painter,int,int);
+    void eraseMark(QPainter& painter,int x,int y);
 
 protected:
     void paintEvent(QPaintEvent* event) override;
