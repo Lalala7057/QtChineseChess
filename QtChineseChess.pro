@@ -8,19 +8,17 @@ CONFIG += c++17
 
 SOURCES += \
     Board.cpp \
-    ChessPiece.cpp \
-    Gamecontroller.cpp \
-    main.cpp \
-    mainwindow.cpp
+    GameController.cpp \
+    MainWindow.cpp \
+    main.cpp
 
 HEADERS += \
     Board.h \
-    ChessPiece.h \
-    Gamecontroller.h \
-    mainwindow.h
+    GameController.h \
+    MainWindow.h
 
 FORMS += \
-    mainwindow.ui
+    MainWindow.ui
 
 # Default rules for deployment.
 QMAKE_PROJECT_DEPTH = 0

@@ -1,15 +1,12 @@
-#include "mainwindow.h"
-
 #include <QApplication>
-#include "Gamecontroller.h"
+#include "GameController.h"
 
 GameController* game = nullptr;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     game = new GameController(&a);
-    MainWindow w;
-    w.show();
+    game->curWindow->show();
     return a.exec();
     delete game;
 }
